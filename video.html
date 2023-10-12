@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<body onload="init()">
+    <style>
+        canvas, video, div {
+            border: 2px solid black;
+            filter: grayscale(80%);
+        }
+        
+        button {
+            font-size: 20px;
+        }
+        
+        div#myApplicationLog {
+            margin-top: 1em;
+        }
+    </style>
+    
+    <button id="myButton">Take Picture</button>
+    <br>
+    <canvas id="myCanvas" height="300" width="400"></canvas>
+    <video id="myVideo" height="300" width="400"></video>
+    
+    
+    
+    <script>
+        let myButton = document.getElementById("myButton");
+        let myCanvas = document.getElementById("myCanvas");
+        let myVideo = document.getElementById("myVideo");
+        let myCanvasContext = myCanvas.getContext("2d");
+
+        myButton.addEventListener("click", takePicture)
+        
+        function init(){
+            navigator.mediaDevices.getUserMedia({video:true})
+            .then(attachVideo)
+            .catch(informMeOfError);
+        }
+        
+        function attachVideo(videoData){
+            // attach the video stream to the video tag
+            myVideo.srcObject = videoData;
+            // start to play the video
+            myVideo.onloadedmetadata = playVideo;
+        }
+        
+        function informMeOfError(error){
+            console.log("In informMeOfError()", error.name, error.message);
+        }
+        
+        function playVideo(){
+            myVideo.play();
+        }
+        
+        function takePicture(){   
+            myCanvasContext.drawImage(myVideo, 0, 0, myVideo.width, myVideo.height);
+        }
+    </script>
+</body>
+</html>
